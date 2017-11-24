@@ -45,7 +45,7 @@
     <Compile Include="Models\Input.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Score.cs" />
+    <Compile Include="Sprites\Score.cs" />
     <Compile Include="Sprites\Ball.cs" />
     <Compile Include="Sprites\Bat.cs" />
     <Compile Include="Sprites\Sprite.cs" />
