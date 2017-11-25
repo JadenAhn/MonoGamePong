@@ -63,3 +63,9 @@
 /processorParam:TextureFormat=Compressed
 /build:Win.spritefont
 
+#begin SFBounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFBounce.wav
+

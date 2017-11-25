@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pong.Sprites;
@@ -22,6 +23,7 @@ namespace Pong
         private Score _score;
         private WinMessage _winMessage;
         private List<Sprite> _sprites;
+        private SoundEffect _soundEffect;
 
         public Game1()
         {
@@ -58,6 +60,7 @@ namespace Pong
 
             _score = new Score(Content.Load<SpriteFont>("Font"));
             _winMessage = new WinMessage(Content.Load<SpriteFont>("Win"));
+            _soundEffect = Content.Load<SoundEffect>("SFBounce");
 
             _sprites = new List<Sprite>()
             {
@@ -84,7 +87,8 @@ namespace Pong
                 {
                     position = new Vector2((screenWidth / 2) - (ballTexture.Width / 2), (screenHeight / 2) - (ballTexture.Height / 2)),
                     score = _score,
-                    winMessage = _winMessage
+                    winMessage = _winMessage,
+                    soundEffect = _soundEffect
                 }
             };
 

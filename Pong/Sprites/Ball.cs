@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Pong.Sprites
 {
@@ -22,6 +23,7 @@ namespace Pong.Sprites
         public Score score;
         public WinMessage winMessage;
         public int speedIncrementSpan = 10;
+        public SoundEffect soundEffect;
 
         public Ball(Texture2D texture) : base(texture)
         {
@@ -64,18 +66,22 @@ namespace Pong.Sprites
 
                 if (this.velocity.X > 0 && this.IsTouchingLeft(sprite))
                 {
+                    soundEffect.Play();
                     this.velocity.X = -this.velocity.X;
                 }
                 if (this.velocity.X < 0 && this.IsTouchingRight(sprite))
                 {
+                    soundEffect.Play();
                     this.velocity.X = -this.velocity.X;
                 }
                 if (this.velocity.Y > 0 && this.IsTouchingTop(sprite))
                 {
+                    soundEffect.Play();
                     this.velocity.Y = -this.velocity.Y;
                 }
                 if (this.velocity.Y < 0 && this.IsTouchingBottom(sprite))
                 {
+                    soundEffect.Play();
                     this.velocity.Y = -this.velocity.Y;
                 }
             }
