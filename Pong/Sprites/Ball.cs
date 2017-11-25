@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using static Pong.Game1;
 
 namespace Pong.Sprites
 {
@@ -23,7 +24,8 @@ namespace Pong.Sprites
         public Score score;
         public WinMessage winMessage;
         public int speedIncrementSpan = 10;
-        public SoundEffect soundEffect;
+        public SoundEffect SFBounce;
+        public SoundEffect SFScore;
 
         public Ball(Texture2D texture) : base(texture)
         {
@@ -38,7 +40,6 @@ namespace Pong.Sprites
 
                 Restart();
             }
-
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 _isPlaying = true;
@@ -66,22 +67,22 @@ namespace Pong.Sprites
 
                 if (this.velocity.X > 0 && this.IsTouchingLeft(sprite))
                 {
-                    soundEffect.Play();
+                    SFBounce.Play();
                     this.velocity.X = -this.velocity.X;
                 }
                 if (this.velocity.X < 0 && this.IsTouchingRight(sprite))
                 {
-                    soundEffect.Play();
+                    SFBounce.Play();
                     this.velocity.X = -this.velocity.X;
                 }
                 if (this.velocity.Y > 0 && this.IsTouchingTop(sprite))
                 {
-                    soundEffect.Play();
+                    SFBounce.Play();
                     this.velocity.Y = -this.velocity.Y;
                 }
                 if (this.velocity.Y < 0 && this.IsTouchingBottom(sprite))
                 {
-                    soundEffect.Play();
+                    SFBounce.Play();
                     this.velocity.Y = -this.velocity.Y;
                 }
             }
@@ -94,6 +95,7 @@ namespace Pong.Sprites
             if (position.X <= 0)
             {
                 score.score2++;
+                SFScore.Play();
                 winMessage.player = 2;
                 Restart();
             }
@@ -101,6 +103,7 @@ namespace Pong.Sprites
             if (position.X + _texture.Width >= Game1.screenWidth)
             {
                 score.score1++;
+                SFScore.Play();
                 winMessage.player = 1;
                 Restart();
             }

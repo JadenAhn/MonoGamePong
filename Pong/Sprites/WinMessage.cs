@@ -19,7 +19,7 @@ namespace Pong
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "PLAYER " + player.ToString() + " WIN!", new Vector2(280, 280), Color.Yellow);
+            spriteBatch.DrawString(_font, "PLAYER " + player.ToString() + " WIN!", new Vector2(240, 200), Color.Yellow);
         }
     }
 }

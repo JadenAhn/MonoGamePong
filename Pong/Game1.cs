@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Pong.Sprites;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,21 @@ namespace Pong
 
         private Score _score;
         private WinMessage _winMessage;
+        private Title _title;
         private List<Sprite> _sprites;
-        private SoundEffect _soundEffect;
+        private SoundEffect _SFBounce;
+        private SoundEffect _SFScore;
+        private Song _songGameTitle;
+        private Song _songGameStart;
+        private Song _songGameOver;
+        public static GamePhase _gamePhase;
 
+        public enum GamePhase
+        {
+            gameTitle,
+            gameStart,
+            gameOver
+        }
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -43,6 +56,7 @@ namespace Pong
             screenWidth = graphics.PreferredBackBufferWidth;
             screenHeight = graphics.PreferredBackBufferHeight;
             random = new Random();
+            _gamePhase = GamePhase.gameTitle;
             base.Initialize();
         }
 
@@ -60,8 +74,12 @@ namespace Pong
 
             _score = new Score(Content.Load<SpriteFont>("Font"));
             _winMessage = new WinMessage(Content.Load<SpriteFont>("Win"));
-            _soundEffect = Content.Load<SoundEffect>("SFBounce");
-
+            _SFBounce = Content.Load<SoundEffect>("SFBounce");
+            _SFScore = Content.Load<SoundEffect>("SFScore");
+            _songGameTitle = Content.Load<Song>("SongGameTitle");
+            _songGameStart = Content.Load<Song>("SongGameStart");
+            _songGameOver = Content.Load<Song>("SongGameOver");
+            _title = new Title(Content.Load<Texture2D>("Title"));
             _sprites = new List<Sprite>()
             {
                 new Sprite(Content.Load<Texture2D>("Background")),
@@ -88,10 +106,11 @@ namespace Pong
                     position = new Vector2((screenWidth / 2) - (ballTexture.Width / 2), (screenHeight / 2) - (ballTexture.Height / 2)),
                     score = _score,
                     winMessage = _winMessage,
-                    soundEffect = _soundEffect
+                    SFBounce = _SFBounce,
+                    SFScore = _SFScore
                 }
             };
-
+            PlayMusic();
             // TODO: use this.Content to load your game content here
         }
 
@@ -111,14 +130,32 @@ namespace Pong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            foreach (var sprite in _sprites)
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                sprite.Update(gameTime, _sprites);
+                Exit();
             }
 
-            if (_score.score1 == 3 || _score.score2 == 3)
+            if (_gamePhase == GamePhase.gameTitle)
             {
-                isGameOver = true;
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    _gamePhase = GamePhase.gameStart;
+                    PlayMusic();
+                }
+            }
+            else if (_gamePhase == GamePhase.gameStart)
+            {
+                foreach (var sprite in _sprites)
+                {
+                    sprite.Update(gameTime, _sprites);
+                }
+
+                if (_score.score1 == 1 || _score.score2 == 1)
+                {
+                    _gamePhase = GamePhase.gameOver;
+                    PlayMusic();
+                }
             }
 
             base.Update(gameTime);
@@ -130,19 +167,25 @@ namespace Pong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
             spriteBatch.Begin();
 
-            foreach (var sprite in _sprites)
+            if (_gamePhase == GamePhase.gameTitle)
             {
-                sprite.Draw(spriteBatch);
+                _title.Draw(spriteBatch);
             }
-
-            _score.Draw(spriteBatch);
-            if (isGameOver)
+            else if (_gamePhase == GamePhase.gameStart)
+            {
+                foreach (var sprite in _sprites)
+                {
+                    sprite.Draw(spriteBatch);
+                }
+                _score.Draw(spriteBatch);
+            }
+            else
             {
                 _winMessage.Draw(spriteBatch);
             }
@@ -150,6 +193,28 @@ namespace Pong
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected void PlayMusic()
+        {
+            switch (_gamePhase)
+            {
+                case GamePhase.gameTitle:
+                    MediaPlayer.Play(_songGameTitle);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+                case GamePhase.gameStart:
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(_songGameStart);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+                case GamePhase.gameOver:
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(_songGameOver);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
