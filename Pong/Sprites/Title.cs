@@ -17,7 +17,7 @@ namespace Pong.Sprites
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_spriteBatch, new Vector2(280, 200), Color.Yellow);
+            spriteBatch.Draw(_spriteBatch, new Vector2(280, 200), Color.White);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Pong
 
         private Score _score;
         private WinMessage _winMessage;
+        private StartMessage _startMessage;
         private Title _title;
         private List<Sprite> _sprites;
         private SoundEffect _SFBounce;
@@ -31,6 +32,8 @@ namespace Pong
         private Song _songGameStart;
         private Song _songGameOver;
         public static GamePhase _gamePhase;
+        public float opacity = 0f;
+        public bool isIncreasing = true;
 
         public enum GamePhase
         {
@@ -72,14 +75,15 @@ namespace Pong
             var batTexture = Content.Load<Texture2D>("Bat");
             var ballTexture = Content.Load<Texture2D>("Ball");
 
-            _score = new Score(Content.Load<SpriteFont>("Font"));
-            _winMessage = new WinMessage(Content.Load<SpriteFont>("Win"));
+            _score = new Score(Content.Load<SpriteFont>("TitleFont"));
+            _winMessage = new WinMessage(Content.Load<SpriteFont>("WinMessageFont"));
             _SFBounce = Content.Load<SoundEffect>("SFBounce");
             _SFScore = Content.Load<SoundEffect>("SFScore");
             _songGameTitle = Content.Load<Song>("SongGameTitle");
             _songGameStart = Content.Load<Song>("SongGameStart");
             _songGameOver = Content.Load<Song>("SongGameOver");
             _title = new Title(Content.Load<Texture2D>("Title"));
+            _startMessage = new StartMessage(Content.Load<Texture2D>("StartMessage"));
             _sprites = new List<Sprite>()
             {
                 new Sprite(Content.Load<Texture2D>("Background")),
@@ -138,6 +142,29 @@ namespace Pong
 
             if (_gamePhase == GamePhase.gameTitle)
             {
+                const float BLINKSPEED = 0.02f;
+                if (opacity <= 0)
+                {
+                    opacity += BLINKSPEED;
+                    isIncreasing = true;
+                }
+                else if(opacity < 1)
+                {
+                    if (isIncreasing)
+                    {
+                        opacity += BLINKSPEED;
+                    }
+                    else
+                    {
+                        opacity -= BLINKSPEED;
+                    }
+                }
+                else
+                {
+                    opacity -= BLINKSPEED;
+                    isIncreasing = false;
+                }
+                
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
                     _gamePhase = GamePhase.gameStart;
@@ -151,13 +178,12 @@ namespace Pong
                     sprite.Update(gameTime, _sprites);
                 }
 
-                if (_score.score1 == 1 || _score.score2 == 1)
+                if (_score.score1 == 3 || _score.score2 == 3)
                 {
                     _gamePhase = GamePhase.gameOver;
                     PlayMusic();
                 }
             }
-
             base.Update(gameTime);
         }
 
@@ -176,6 +202,7 @@ namespace Pong
             if (_gamePhase == GamePhase.gameTitle)
             {
                 _title.Draw(spriteBatch);
+                _startMessage.Draw(spriteBatch, opacity);
             }
             else if (_gamePhase == GamePhase.gameStart)
             {
