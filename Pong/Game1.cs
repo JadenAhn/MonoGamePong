@@ -17,8 +17,10 @@ namespace Pong
         public static int screenWidth;
         public static int screenHeight;
         public static Random random;
+        public static bool isGameOver = false;
 
         private Score _score;
+        private WinMessage _winMessage;
         private List<Sprite> _sprites;
 
         public Game1()
@@ -39,8 +41,6 @@ namespace Pong
             screenWidth = graphics.PreferredBackBufferWidth;
             screenHeight = graphics.PreferredBackBufferHeight;
             random = new Random();
-
-
             base.Initialize();
         }
 
@@ -57,6 +57,7 @@ namespace Pong
             var ballTexture = Content.Load<Texture2D>("Ball");
 
             _score = new Score(Content.Load<SpriteFont>("Font"));
+            _winMessage = new WinMessage(Content.Load<SpriteFont>("Win"));
 
             _sprites = new List<Sprite>()
             {
@@ -82,7 +83,8 @@ namespace Pong
                 new Ball(ballTexture)
                 {
                     position = new Vector2((screenWidth / 2) - (ballTexture.Width / 2), (screenHeight / 2) - (ballTexture.Height / 2)),
-                    score = _score
+                    score = _score,
+                    winMessage = _winMessage
                 }
             };
 
@@ -110,6 +112,11 @@ namespace Pong
                 sprite.Update(gameTime, _sprites);
             }
 
+            if (_score.score1 == 3 || _score.score2 == 3)
+            {
+                isGameOver = true;
+            }
+
             base.Update(gameTime);
         }
 
@@ -131,6 +138,11 @@ namespace Pong
             }
 
             _score.Draw(spriteBatch);
+            if (isGameOver)
+            {
+                _winMessage.Draw(spriteBatch);
+            }
+            
             spriteBatch.End();
 
             base.Draw(gameTime);

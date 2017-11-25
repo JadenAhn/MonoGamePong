@@ -20,6 +20,7 @@ namespace Pong.Sprites
         private bool _isPlaying;
 
         public Score score;
+        public WinMessage winMessage;
         public int speedIncrementSpan = 10;
 
         public Ball(Texture2D texture) : base(texture)
@@ -87,13 +88,23 @@ namespace Pong.Sprites
             if (position.X <= 0)
             {
                 score.score2++;
+                winMessage.player = 2;
                 Restart();
             }
 
             if (position.X + _texture.Width >= Game1.screenWidth)
             {
                 score.score1++;
+                winMessage.player = 1;
                 Restart();
+            }
+
+            if (Game1.isGameOver)
+            {
+                score.score1 = 0;
+                score.score2 = 0;
+                Restart();
+                Game1.isGameOver = false;
             }
 
             position += velocity * speed;

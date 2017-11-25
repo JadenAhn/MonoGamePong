@@ -56,3 +56,10 @@
 /processorParam:TextureFormat=Compressed
 /build:Font.spritefont
 
+#begin Win.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Win.spritefont
+
